@@ -5,8 +5,8 @@ git credential-cache exit
 rm ~/.git-credentials
 
 
-git config --global --unset user.name
-git config --global --unset user.email
+git config --global --unset user.name "A.S"
+git config --global --unset user.email "@gmail.com"
 
 
 
@@ -17,13 +17,13 @@ git config --global --unset user.email
 login:
 local:
 git config --global user.name "A.S"
-git config --global user.email "shevaaniarun@gmail.com"
+git config --global user.email "@gmail.com"
 git config --global --list
 
 git add . && git commit -m "message" && git push
 
 remote:
-git remote add origin https://github.com/Shevaaniarun/fstlabfiles.git
+git remote add origin https://github.com/sa/fstlabfiles.git
 git branch -M main
 git push -u origin main
 
@@ -33,6 +33,6 @@ git push -u origin main
 
 git remote remove origin
 git remote -v
-git remote add origin https://github.com/Shevaaniarun/fstlabfiles.git
+git remote add origin https://github.com/Sharun/fstlabfiles.git
 git branch -M main
 git push -u origin main
