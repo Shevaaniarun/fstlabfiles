@@ -1,9 +1,31 @@
+logout:
 git config --global --unset credential.helper
 git credential-cache exit
 
 rm ~/.git-credentials
 
 
-git config --global user.name "Your New GitHub Username"
-git config --global user.email "youremail@example.com"
+git config --global --unset user.name
+git config --global --unset user.email
+
+
+
+
+
+
+
+login:
+local:
+git config --global user.name "A.S"
+git config --global user.email "shevaaniarun@gmail.com"
+git config --global --list
+
+git add . && git commit -m "message" && git push
+
+remote:
+git remote add origin https://github.com/Shevaaniarun/fstlabfiles.git
+git branch -M main
+git push -u origin main
+
+
 
