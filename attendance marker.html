@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .table-container {
+            height: 300px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Mark Attendance</h2>
+    <div class="container">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Math</th>
+                        <th>Science</th>
+                        <th>English</th>
+                    </tr>
+                </thead>
+                <tbody id="attendance-table">
+                    <!-- Student rows will be added dynamically -->
+                </tbody>
+            </table>
+        </div>
+        <button onclick="saveAttendance()">Save Attendance</button>
+    </div>
+
+    <script>
+        const students = ["John Doe", "Jane Smith", "Alice Johnson", "Bob Brown", "Charlie White"];
+
+        function loadAttendance() {
+            const table = document.getElementById("attendance-table");
+            table.innerHTML = "";
+
+            students.forEach((student, index) => {
+                let savedData = JSON.parse(localStorage.getItem(`student-${index}`)) || [false, false, false];
+
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${student}</td>
+                    <td><input type="checkbox" ${savedData[0] ? "checked" : ""}></td>
+                    <td><input type="checkbox" ${savedData[1] ? "checked" : ""}></td>
+                    <td><input type="checkbox" ${savedData[2] ? "checked" : ""}></td>
+                `;
+                table.appendChild(row);
+            });
+        }
+
+        function saveAttendance() {
+            const rows = document.querySelectorAll("#attendance-table tr");
+            rows.forEach((row, index) => {
+                const checkboxes = row.querySelectorAll("input[type='checkbox']");
+                const attendanceData = [
+                    checkboxes[0].checked,
+                    checkboxes[1].checked,
+                    checkboxes[2].checked
+                ];
+                localStorage.setItem(`student-${index}`, JSON.stringify(attendanceData));
+            });
+
+            alert("Attendance Saved Successfully!");
+        }
+
+        // Load attendance when page loads
+        window.onload = loadAttendance;
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Multiple Users with CAPTCHA</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+    .container{
+        margin: 10px;
+        padding:auto;
+        border: 5px;
+        border-radius: 3;
+        JUSTIFY-CONTENT: center;
+        display:grid
+    }
+</style>
+<body>
+    <div class="container">
+        <h2>Register</h2>
+
+        <label for="username">Username:</label>
+        <input type="text" id="username" placeholder="Enter username">
+        <br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" placeholder="Enter password">
+        <br>
+
+        <label for="captcha">CAPTCHA:</label>
+        <div class="captcha-container">
+            <span id="captcha-text"></span>
+            <button onclick="generateCaptcha()">Regenerate captcha</button>
+        </div>
+        <input type="text" id="captcha-input" placeholder="Enter CAPTCHA">
+
+        <button onclick="storeData()">Submit</button>
+        <button onclick="clearData()">Clear All Data</button>
+        <p id="message"></p>
+    </div>
+
+    <script>
+    // Function to generate random CAPTCHA
+    function generateCaptcha() {
+        let captchaText = Math.random().toString(36).substring(2, 8).toUpperCase();
+        document.getElementById("captcha-text").innerText = captchaText;
+    }
+
+    // Function to store user data in localStorage
+    function storeData() {
+        let username = document.getElementById("username").value.trim();
+        let password = document.getElementById("password").value.trim();
+        let captchaInput = document.getElementById("captcha-input").value.trim();
+        let captchaGenerated = document.getElementById("captcha-text").innerText;
+        let message = document.getElementById("message");
+
+        // Validate input fields
+        if (username === "" || password === "" || captchaInput === "") {
+            message.style.color = "red";
+            message.innerText = "All fields are required!";
+            return;
+        }
+
+        // Validate CAPTCHA
+        if (captchaInput !== captchaGenerated) {
+            message.style.color = "red";
+            message.innerText = "Incorrect CAPTCHA!";
+            return;
+        }
+
+        // Get existing users from localStorage
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+
+        // Check if username already exists
+        let userExists = users.some(user => user.username === username);
+        if (userExists) {
+            message.style.color = "red";
+            message.innerText = "Username already exists! Try another one.";
+            return;
+        }
+
+        // Add new user
+        users.push({ username, password });
+
+        // Save updated user list to localStorage
+        localStorage.setItem("users", JSON.stringify(users));
+
+        message.style.color = "green";
+        message.innerText = "User data saved successfully!";
+
+        // Clear input fields
+        document.getElementById("username").value = "";
+        document.getElementById("password").value = "";
+        document.getElementById("captcha-input").value = "";
+
+        // Refresh CAPTCHA
+        generateCaptcha();
+
+        // Update user list display
+        displayUsers();
+    }
+
+    // Function to display stored users
+    function displayUsers() {
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+        users.forEach(user => {
+            console.log(`Username: ${user.username}, Password: ${user.password}`);
+        });
+    }
+
+    // Function to clear all stored users
+    function clearData() {
+        localStorage.removeItem("users");
+        alert("All user data cleared.");
+        displayUsers();
+    }
+
+    // Run on page load
+    window.onload = function () {
+        generateCaptcha();
+        displayUsers();
+    };
+    </script>
+</body>
+</html>

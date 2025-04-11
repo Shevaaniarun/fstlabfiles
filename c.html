@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p id="result">result: </p>
+    <script type="text/javascript"> 
+        student=[
+        { name: "Alice", grade: "A" },
+        { name: "Bob", grade: "B" },
+        { name: "Charlie", grade: "A" },
+        { name: "David", grade: "C" }
+        ]
+
+        grades={}
+
+        for(let i=0;i<student.length;i++)
+        {
+            grades[student[i].grade]=[]
+        }
+        for(let i=0;i<student.length;i++)
+        {
+            a=student[i].grade
+            grades[a].push(student[i].name)
+        }    
+        console.log(grades)
+    </script>
+</body>
+</html>

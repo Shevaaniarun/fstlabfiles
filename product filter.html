@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Filter App</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Product Filter App</h2>
+        <div class="filter-box">
+            <label for="categoryFilter">Filter by Category:</label>
+            <select id="categoryFilter" onchange="filterProducts()">
+            <option value="all">All</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Clothing">Clothing</option>
+            <option value="Furniture">Furniture</option>
+            </select>
+        </div>
+        <form id="addProductForm">
+            <input type="text" id="productName" placeholder="Product Name" required>
+            <select id="productCategory">
+            <option value="Electronics">Electronics</option>
+            <option value="Clothing">Clothing</option>
+            <option value="Furniture">Furniture</option>
+            </select>
+            <input type="number" id="productPrice" placeholder="Price" required>
+            <button type="button" onclick="addProduct()">Add Product</button>
+        </form>
+        <div id="productList"></div>
+    </div>
+<style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    }
+    body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+    }
+    .container {
+    width: 400px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    }
+   
+    .filter-box {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    }
+    select {
+    padding: 5px;
+    font-size: 1em;
+    border-radius: 5px;
+    }
+    
+    form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+    }
+    input, select, button {
+    padding: 8px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    }
+    button {
+    background: #1a78cf;
+    color: white;
+    cursor: pointer;
+    border: none;
+    }
+    button:hover {
+    background: rgb(37, 72, 138);
+    }
+    
+    #productList {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    }
+    
+    .product-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: #e0e0e0;
+    border-radius: 5px;
+    }
+    .remove-btn {
+    background: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    }
+    .remove-btn:hover {
+    background: darkred;
+    }
+</style>
+    <script>
+    let products = [
+    { name: "Laptop", category: "Electronics", price: 1000 },
+    { name: "Smartphone", category: "Electronics", price: 700 },
+    { name: "T-shirt", category: "Clothing", price: 20 },
+    { name: "Jeans", category: "Clothing", price: 50 },
+    { name: "Sofa", category: "Furniture", price: 500 },
+    { name: "Table", category: "Furniture", price: 200 }
+    ];
+    function displayProducts(filteredProducts) {
+    let productList = document.getElementById("productList");
+    productList.innerHTML = "";
+    filteredProducts.forEach((product, index) => {
+    let productCard = document.createElement("div");
+    productCard.classList.add("product-card");
+    productCard.innerHTML = `
+    <div>
+    <strong>${product.name}</strong><br>
+    <small>${product.category} - Rs.${product.price}</small>
+    </div>
+    <button class="remove-btn" onclick="removeProduct(${index})">Remove</button>
+    `;
+    productList.appendChild(productCard);
+    });
+    }
+    function filterProducts() {
+    let category = document.getElementById("categoryFilter").value;
+    let filteredProducts = category === "all" ? products : products.filter(product =>
+    product.category === category);
+    displayProducts(filteredProducts);
+    }
+    function addProduct() {
+    let name = document.getElementById("productName").value.trim();
+    let category = document.getElementById("productCategory").value;
+    let price = document.getElementById("productPrice").value.trim();
+    if (name && price) {
+    let newProduct = {
+    name,
+    category,
+    price: parseFloat(price)
+    };
+    products.push(newProduct);
+    filterProducts(); 
+    document.getElementById("addProductForm").reset();
+    } else {
+    alert("Please fill all fields.");
+    }
+    }
+    function removeProduct(index) {
+    products.splice(index, 1);
+    filterProducts();
+    }
+    
+    displayProducts(products);
+</script>
+</body>
+</html>

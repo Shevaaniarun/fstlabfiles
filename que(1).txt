@@ -1,0 +1,683 @@
+Server_client.js
+const express = require("express");
+const bodyParser = require("body-parser");
+
+const app = express();
+const PORT = 4100;
+
+// Middleware to parse form data
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Serve static files (for HTML form)
+//app.use(express.static("public"));
+
+app.get('/', (req, res)=>
+{
+res.send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login</title>
+</head>
+<body>
+    <h2>Enter Exam Details</h2>
+    <form id="examForm">
+        <label>Register Number:</label>
+        <input type="text" name="registerNumber" required><br><br>
+
+        <label>Subject Code:</label>
+        <input type="text" name="subjectCode" required><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <h3>Seat Allocation:</h3>
+    <p id="result"></p>
+
+    <script>
+        document.getElementById("examForm").addEventListener("submit", async function(event) {
+            event.preventDefault(); // Prevent form from reloading
+
+            const formData = new FormData(this);
+            const data = new URLSearchParams(formData).toString();
+
+            const response = await fetch("/allocate-seat", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: data
+            });
+
+            const result = await response.json();
+            document.getElementById("result").innerText = \`Hall: \${result.hallNumber}, Seat: \${result.seatNumber}\`;
+        });
+    </script>
+</body>
+</html>
+`)
+});
+
+// Route to handle student login and seat assignment
+app.post("/allocate-seat", (req, res) => {
+    const { registerNumber, subjectCode } = req.body;
+
+    if (!registerNumber || !subjectCode) {
+        return res.status(400).send("Register number and subject code are required!");
+    }
+
+    // Generate random hall and seat number
+    const hallNumber = `H-${Math.floor(Math.random() * 10) + 1}`;
+    const seatNumber = `S-${Math.floor(Math.random() * 50) + 1}`;
+
+    // JSON response
+    res.json({ hallNumber, seatNumber });
+});
+
+// Start server
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Faculty_Attendance.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Attendance System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+    background-color: #f4f4f4;
+}
+
+.attendance-form {
+    background: white;
+    padding: 15px;
+    display: inline-block;
+    border-radius: 5px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+input, select, button {
+    display: block;
+    margin: 10px auto;
+    padding: 8px;
+}
+
+button {
+    background: green;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.scrollable-table {
+    max-height: 300px;
+    overflow-y: auto;
+    margin: auto;
+    width: 80%;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: #ddd;
+}
+
+button.update {
+    background: blue;
+}
+
+button.delete {
+    background: red;
+}
+
+</style>
+<body>
+    <h2>Faculty Attendance Management</h2>
+
+    <div class="attendance-form">
+        <label>Student Name:</label>
+        <input type="text" id="studentName" required>
+        
+        <label>Subject:</label>
+        <select id="subject">
+            <option value="Math">Math</option>
+            <option value="Science">Science</option>
+            <option value="English">English</option>
+        </select>
+
+        <label>Status:</label>
+        <select id="status">
+            <option value="Present">Present</option>
+            <option value="Absent">Absent</option>
+        </select>
+
+        <button onclick="markAttendance()">Mark Attendance</button>
+    </div>
+
+    <h3>Attendance Records</h3>
+    <div class="scrollable-table">
+        <table id="attendanceTable">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Subject</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</body>
+<script>
+    let attendanceRecords = [];
+
+function markAttendance() {
+    const studentName = document.getElementById("studentName").value.trim();
+    const subject = document.getElementById("subject").value;
+    const status = document.getElementById("status").value;
+
+    if (studentName === "") {
+        alert("Please enter a student name.");
+        return;
+    }
+
+    const existingRecord = attendanceRecords.find(
+        record => record.studentName === studentName && record.subject === subject
+    );
+
+    if (existingRecord) {
+        existingRecord.status = status;
+    } else {
+        attendanceRecords.push({ studentName, subject, status });
+    }
+
+    updateTable();
+}
+
+function updateTable() {
+    const tableBody = document.querySelector("#attendanceTable tbody");
+    tableBody.innerHTML = "";
+
+    attendanceRecords.forEach((record, index) => {
+        const row = `
+            <tr>
+                <td>${record.studentName}</td>
+                <td>${record.subject}</td>
+                <td>${record.status}</td>
+                <td>
+                    <button class="update" onclick="editAttendance(${index})">Update</button>
+                    <button class="delete" onclick="deleteAttendance(${index})">Delete</button>
+                </td>
+            </tr>
+        `;
+        tableBody.innerHTML += row;
+    });
+}
+
+function editAttendance(index) {
+    const record = attendanceRecords[index];
+    document.getElementById("studentName").value = record.studentName;
+    document.getElementById("subject").value = record.subject;
+    document.getElementById("status").value = record.status;
+}
+
+function deleteAttendance(index) {
+    attendanceRecords.splice(index, 1);
+    updateTable();
+}
+
+</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+User.js
+const express = require("express");
+const session = require("express-session");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+
+const app = express();
+const PORT = 4000;
+
+// Middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(
+    session({
+        secret: "mysecretkey", // Change this to a strong secret key
+        resave: false,
+        saveUninitialized: true,
+        cookie: { secure: false } // Set true if using HTTPS
+    })
+);
+
+// Dummy Database (Replace with real DB in production)
+const users = {};
+
+// Serve static files (for HTML form)
+app.use(express.static("public"));
+
+// Route: Home (Login/Register Page)
+app.get("/", (req, res) => {
+    res.send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Registration</title>
+</head>
+<body>
+    <h2>Register</h2>
+    <form action="/register" method="POST">
+        <input type="text" name="username" placeholder="Username" required><br>
+        <input type="password" name="password" placeholder="Password" required><br>
+        <input type="text" name="name" placeholder="Full Name" required><br>
+        <input type="number" name="age" placeholder="Age" required><br>
+        <button type="submit">Register</button>
+    </form>
+
+    <h2>Login</h2>
+    <form action="/login" method="POST">
+        <input type="text" name="username" placeholder="Username" required><br>
+        <input type="password" name="password" placeholder="Password" required><br>
+        <button type="submit">Login</button>
+    </form>
+</body>
+</html>
+`);
+});
+
+// Route: Register User
+app.post("/register", (req, res) => {
+    const { username, password, name, age } = req.body;
+
+    if (!username || !password || !name || !age) {
+        return res.send("All fields are required!");
+    }
+
+    if (users[username]) {
+        return res.send("Username already exists!");
+    }
+
+    users[username] = { password, name, age };
+    res.send("Registration successful! You can now log in.");
+});
+
+// Route: Login User
+app.post("/login", (req, res) => {
+    const { username, password } = req.body;
+
+    if (!users[username] || users[username].password !== password) {
+        return res.send("Invalid username or password!");
+    }
+
+    req.session.user = username; // Store username in session
+    res.cookie("user", username); // Store username in cookies
+    res.send(`Welcome, ${users[username].name}! <a href="/${username}">View Profile</a>`);
+});
+
+// Route: Show User Info (Only if logged in)
+app.get("/:username", (req, res) => {
+    const loggedInUser = req.session.user;
+
+    if (!loggedInUser || loggedInUser !== req.params.username) {
+        return res.send("Unauthorized! Please log in first.");
+    }
+
+    const user = users[loggedInUser];
+    res.send(`👤 Name: ${user.name} <br> 🎂 Age: ${user.age} <br> <a href="/logout">Logout</a>`);
+});
+
+// Route: Logout
+app.get("/logout", (req, res) => {
+    req.session.destroy(() => {
+        res.clearCookie("user");
+        res.send("Logged out successfully! <a href='/'>Go to Home</a>");
+    });
+});
+
+// Start Server
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+
+q batch:
+const express = require('express');
+const app = express();
+const PORT = 5000;
+
+app.use(express.static(__dirname + '/public'));
+
+// Product JSON data
+const products = [
+    { name: "Men's Casual T-shirt", type: 'Men', description: 'Comfortable and stylish casual T-shirt for men', price: 350, image: '/tshirt.jpg' },
+    { name: "Women's Summer Dress", type: 'Women', description: 'Lightweight and stylish summer dress for women', price: 750, image: '/dress.jpg' },
+    { name: "Unisex Running Shoes", type: 'Unisex', description: 'Durable and comfortable running shoes for all', price: 1200, image: '/shoes.jpg' }
+];
+
+app.use(express.json());
+
+// Serve the main webpage
+app.get('/', (req, res) => {
+    res.send(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>E-Commerce Store</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                .container { max-width: 800px; margin: auto; }
+                .product { border: 1px solid #ddd; padding: 15px; margin: 10px 0; display: flex; align-items: center; }
+                .product img { width: 80px; height: 80px; margin-right: 10px; }
+                .cart { margin-top: 20px; padding: 10px; border: 1px solid #000; }
+                .button { background-color: blue; color: white; padding: 5px 10px; cursor: pointer; border: none; }
+                .button:hover { background-color: darkblue; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h2>E-Commerce Store</h2>
+                <div id="products"></div>
+                <h3>Shopping Cart</h3>
+                <div class="cart" id="cart">
+                    <p>No items in cart.</p>
+                </div>
+            </div>
+
+            <script>
+                let cart = [];
+
+                // Fetch products from server
+                const products = ${JSON.stringify(products)};
+
+                function displayProducts() {
+                    const productContainer = document.getElementById('products');
+                    productContainer.innerHTML = "";
+                    products.forEach((product, index) => {
+                        productContainer.innerHTML += \`
+                            <div class="product">
+                                <img src="\${product.image}" alt="\${product.name}">
+                                <div>
+                                    <h4>\${product.name}</h4>
+                                    <p>\${product.description}</p>
+                                    <p>Price: ₹\${product.price}</p>
+                                    <button class="button" onclick="addToCart(\${index})">Add to Cart</button>
+                                </div>
+                            </div>
+                        \`;
+                    });
+                }
+
+                function addToCart(index) {
+                    const product = products[index];
+                    const itemIndex = cart.findIndex(item => item.name === product.name);
+                    if (itemIndex > -1) {
+                        cart[itemIndex].quantity += 1;
+                    } else {
+                        cart.push({ ...product, quantity: 1 });
+                    }
+                    updateCart();
+                }
+
+                function updateCart() {
+                    const cartContainer = document.getElementById('cart');
+                    if (cart.length === 0) {
+                        cartContainer.innerHTML = "<p>No items in cart.</p>";
+                        return;
+                    }
+                    let total = 0;
+                    cartContainer.innerHTML = "";
+                    cart.forEach(item => {
+                        total += item.price * item.quantity;
+                        cartContainer.innerHTML += \`
+                            <div>
+                                <p><strong>\${item.name}</strong> (x\${item.quantity}) - ₹\${item.price * item.quantity}</p>
+                            </div>
+                        \`;
+                    });
+                    cartContainer.innerHTML += \`<p><strong>Total: ₹\${total}</strong></p>\`;
+                }
+
+                displayProducts();
+            </script>
+        </body>
+        </html>
+    `);
+});
+
+app.listen(PORT, () => 
+    console.log(`Server running on http://localhost:${PORT}`));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+N batch:
+const express = require('express');
+const app = express();
+const PORT = 5000;
+
+app.use(express.static(__dirname + '/public'));
+
+// Product JSON data
+const products = [
+    { name: "Men's Casual T-shirt", type: 'Men', description: 'Comfortable and stylish casual T-shirt for men', price: 350, image: '/tshirt.jpg' },
+    { name: "Women's Summer Dress", type: 'Women', description: 'Lightweight and stylish summer dress for women', price: 750, image: '/dress.jpg' },
+    { name: "Unisex Running Shoes", type: 'Unisex', description: 'Durable and comfortable running shoes for all', price: 1200, image: '/shoes.jpg' }
+];
+
+app.use(express.json());
+
+// Serve the main webpage
+app.get('/', (req, res) => {
+    res.send(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>E-Commerce Store</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                .container { max-width: 800px; margin: auto; }
+                .product { border: 1px solid #ddd; padding: 15px; margin: 10px 0; display: flex; align-items: center; }
+                .product img { width: 80px; height: 80px; margin-right: 10px; }
+                .cart { margin-top: 20px; padding: 10px; border: 1px solid #000; }
+                .button { background-color: blue; color: white; padding: 5px 10px; cursor: pointer; border: none; }
+                .button:hover { background-color: darkblue; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h2>E-Commerce Store</h2>
+                <div id="products"></div>
+                <h3>Shopping Cart</h3>
+                <div class="cart" id="cart">
+                    <p>No items in cart.</p>
+                </div>
+            </div>
+
+            <script>
+                let cart = [];
+
+                // Fetch products from server
+                const products = ${JSON.stringify(products)};
+
+                function displayProducts() {
+                    const productContainer = document.getElementById('products');
+                    productContainer.innerHTML = "";
+                    products.forEach((product, index) => {
+                        productContainer.innerHTML += \`
+                            <div class="product">
+                                <img src="\${product.image}" alt="\${product.name}">
+                                <div>
+                                    <h4>\${product.name}</h4>
+                                    <p>\${product.description}</p>
+                                    <p>Price: ₹\${product.price}</p>
+                                    <button class="button" onclick="addToCart(\${index})">Add to Cart</button>
+                                </div>
+                            </div>
+                        \`;
+                    });
+                }
+
+                function addToCart(index) {
+                    const product = products[index];
+                    const itemIndex = cart.findIndex(item => item.name === product.name);
+                    if (itemIndex > -1) {
+                        cart[itemIndex].quantity += 1;
+                    } else {
+                        cart.push({ ...product, quantity: 1 });
+                    }
+                    updateCart();
+                }
+
+                function updateCart() {
+                    const cartContainer = document.getElementById('cart');
+                    if (cart.length === 0) {
+                        cartContainer.innerHTML = "<p>No items in cart.</p>";
+                        return;
+                    }
+                    let total = 0;
+                    cartContainer.innerHTML = "";
+                    cart.forEach(item => {
+                        total += item.price * item.quantity;
+                        cartContainer.innerHTML += \`
+                            <div>
+                                <p><strong>\${item.name}</strong> (x\${item.quantity}) - ₹\${item.price * item.quantity}</p>
+                            </div>
+                        \`;
+                    });
+                    cartContainer.innerHTML += \`<p><strong>Total: ₹\${total}</strong></p>\`;
+                }
+
+                displayProducts();
+            </script>
+        </body>
+        </html>
+    `);
+});
+
+app.listen(PORT, () => 
+    console.log(`Server running on http://localhost:${PORT}`));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

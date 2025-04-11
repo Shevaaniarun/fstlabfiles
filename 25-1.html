@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body{
+        margin: 10px;
+        padding:auto;
+        border: 5px;
+        border-radius: 3;
+        JUSTIFY-CONTENT: space-between;
+        
+    }
+    label{
+        display:grid;
+    }
+    input
+    {
+        display: grid;
+    }
+    button{
+        background-color: navy;
+        color: white;
+    }
+    button :hover
+    {
+        background-color: red;
+        color: white; 
+        justify-content: space-around;
+    }
+</style>
+<body>
+    <form id= "stu" action="submit" method="POST">
+        <label for="name"> name: </label>
+        <input type ="text" id="name" placeholder="Enter name">
+        <label for="roll"> roll no: </label>
+        <input type ="number" id="roll" placeholder="Enter Register number" >
+        <label for="emailid"> email: </label>
+        <input type ="email" id="emailid" placeholder="Enter Email id">
+        <label for="phone"> phone number: </label>
+        <input type ="number" id="phone" placeholder="Enter Phone number">
+        <button id="btn" >submit</button>
+        <textarea id="ta" style=" background-color: aquamarine; display: grid;"></textarea>
+        <button onclick="task()">click</button>
+    </form>
+</body> 
+<script>
+    
+    function task(){
+
+    name=document.getElementById("name").value;
+    roll=document.getElementById("roll").value;
+    email=document.getElementById("emailid").value;
+    phone=document.getElementById("phone").value;
+    console.log(name)
+    //const p=document.createElement("p");
+    //p.innerHTML="Name of the student: "+name+"\nRegister number: "+roll;
+    ta.innerHTML="Name of the student: "+name+"\nRegister number: "+roll;
+    }
+    document.getElementById("stu").addEventListener("submit",function(event){
+        event.preventDefault()
+        task()
+    })
+    document.getElementById("btn").addEventListener("click", task);
+</script>
+</html>
+

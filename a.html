@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ex1</title>
+</head>
+<body>
+	<div class="container">
+		<h1>Addition </h1>
+		<label>Enter value 1: </label>
+		<input type="number" id="number1" placeholder="enter a number">
+
+		<label>Enter value 2: </label>
+		<input type="number" id="number2" placeholder="enter a number">
+		<button id ="add">add</button> 
+	</div>
+</body>
+<script>
+
+
+	document.getElementById("add").addEventListener('click', ()=>{
+		const a = parseFloat(document.getElementById("number1").value.trim())
+		const b = parseFloat(document.getElementById("number2").value.trim())
+		alert(a+b);
+	})
+
+</script>
+</html>	

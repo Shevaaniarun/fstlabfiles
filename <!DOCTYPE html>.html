@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+}
+
+.form-container {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    width: 300px;
+    margin: auto;
+}
+
+input {
+    display: block;
+    margin: 10px auto;
+    padding: 8px;
+    width: 90%;
+}
+
+button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+table {
+    width: 80%;
+    margin: auto;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+.actions button {
+    margin: 5px;
+    padding: 5px;
+}
+
+</style>
+<body>
+    <h1>Student Management System</h1>
+
+    <!-- Student Form -->
+    <div class="form-container">
+        <h2>Add / Update Student</h2>
+        <input type="hidden" id="studentId">
+        <label>Name:</label>
+        <input type="text" id="name" placeholder="Enter Name" required>
+        <label>Age:</label>
+        <input type="number" id="age" placeholder="Enter Age" required>
+        <label>Course:</label>
+        <input type="text" id="course" placeholder="Enter Course" required>
+        <button onclick="addOrUpdateStudent()">Submit</button>
+    </div>
+
+    <!-- Student List -->
+    <h2>Student List</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Course</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="studentTable"></tbody>
+    </table>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+    loadStudents();
+});
+
+let students = JSON.parse(localStorage.getItem("students")) || [];
+
+function addOrUpdateStudent() {
+    const id = document.getElementById("studentId").value;
+    const name = document.getElementById("name").value;
+    const age = document.getElementById("age").value;
+    const course = document.getElementById("course").value;
+
+    if (!name || !age || !course) {
+        alert("Please fill in all fields.");
+        return;
+    }
+
+    if (id) {
+        updateStudent(parseInt(id), name, age, course);
+    } else {
+        addStudent(name, age, course);
+    }
+    
+    document.getElementById("studentId").value = "";
+    document.getElementById("name").value = "";
+    document.getElementById("age").value = "";
+    document.getElementById("course").value = "";
+}
+
+function addStudent(name, age, course) {
+    const newStudent = {
+        id: students.length ? students[students.length - 1].id + 1 : 1,
+        name,
+        age,
+        course
+    };
+    students.push(newStudent);
+    saveStudents();
+}
+
+function updateStudent(id, name, age, course) {
+    students = students.map(student =>
+        student.id === id ? { id, name, age, course } : student
+    );
+    saveStudents();
+}
+
+function deleteStudent(id) {
+    students = students.filter(student => student.id !== id);
+    saveStudents();
+}
+
+function editStudent(id) {
+    const student = students.find(student => student.id === id);
+    if (student) {
+        document.getElementById("studentId").value = student.id;
+        document.getElementById("name").value = student.name;
+        document.getElementById("age").value = student.age;
+        document.getElementById("course").value = student.course;
+    }
+}
+
+function saveStudents() {
+    localStorage.setItem("students", JSON.stringify(students));
+    loadStudents();
+}
+
+function loadStudents() {
+    const table = document.getElementById("studentTable");
+    table.innerHTML = "";
+    students.forEach(student => {
+        const row = `<tr>
+            <td>${student.id}</td>
+            <td>${student.name}</td>
+            <td>${student.age}</td>
+            <td>${student.course}</td>
+            <td class="actions">
+                <button onclick="editStudent(${student.id})">Edit</button>
+                <button onclick="deleteStudent(${student.id})" style="background-color:red">Delete</button>
+            </td>
+        </tr>`;
+        table.innerHTML += row;
+    });
+}
+
+    </script>
+</body>
+</html>

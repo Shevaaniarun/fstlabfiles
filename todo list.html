@@ -1,0 +1,166 @@
+<!doctype html>                                                                                                                              
+<html>    
+    <head>                                                                                                                                  
+        <title>To do list</title>                                                                                                            
+        <style>                                                                                                                              
+            #heade{                                                                                                                         
+                color:turquoise;                                                                                                            
+                text-align:center;                                                                                                           
+                border:3px solid tomato;                                                                                                    
+                width:fit-content;                                                                                                           
+                height:fit-content;                                                                                                         
+                margin:auto;                                                                                                                
+                padding:10px                                                                                                                
+            }                                                                                                                                
+            .top{                                                                                                                            
+                margin:auto;                                                                                                                
+                padding-top:10px;                                                                                                           
+                text-align:center;                                                                                                          
+                background-color: blueviolet;                                                                                                    
+                height:30px;                                                                                                                
+                color:white;                                                                                                                
+            }                                                                                                                                
+            .container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-top: 20px;
+            }
+            
+            .input-container {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+                background-color: blueviolet;
+                padding: 20px;
+                border-radius: 5px;
+                border: 1px solid blueviolet;
+            }
+            
+            input {
+                width: 250px;
+                height: 30px;
+            }
+            
+            .add {
+                background-color: blueviolet;
+                color: white;
+                height: 30px;
+                border: 3px solid white;
+                border-radius: 5px;
+                padding: 5px 10px;
+                cursor: pointer;
+            }
+            
+            #tasks {
+                margin-top: 20px;
+                width: 400px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .task-item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                background-color: white;
+                padding: 10px;
+                border: 1px solid blueviolet;
+                border-radius: 5px;
+            }
+            
+            .task-buttons {
+                display: flex;
+                gap: 5px;
+            }
+            
+            .delete {
+                background-color: blueviolet;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                cursor: pointer;
+                border-radius: 3px;
+                justify-content: end;
+                align-items: self-end;
+            }
+            
+            .edit {
+                background-color: blueviolet;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                cursor: pointer;
+                border-radius: 3px;
+                justify-content: end;
+                align-items:self-end;
+            }
+
+            .check {
+                width: 16px;
+                height: 16px;
+                color:blueviolet;
+                background-color: blueviolet;
+                accent-color: blueviolet;
+                margin-right: 5px;
+            }
+        </style>                                                                                                                             
+    </head>                                                                                                                                  
+    <body>                                                                                                                                   
+        <p class="top">To Do App</p>
+        
+        <div class="container">
+            <div class="input-container">                                                                
+                <input type="text" id="tk" name="tk" placeholder="Enter task" required>                                                 
+                <button class="add" onclick=addTask()>Add task</button>                                                                        
+            </div>                                                                                                                               
+            
+            <div id="tasks"></div>                                                                                                              
+        </div>
+    </body>                                                                                                                                  
+    <script>                                                                                                                                 
+        function addTask(){                                                                                                                  
+            const task = document.getElementById("tk");                                                                                      
+            const tex = task.value.trim();                                                                                                    
+            if(tex === "") return;                                                                                                           
+
+            const listItem = document.createElement("div");
+            listItem.classList.add("task-item");
+
+            const check = document.createElement("input");
+            check.type = "checkbox";
+            check.classList.add("check");
+
+            const newTask = document.createElement("span");
+            newTask.textContent = tex;
+
+            const buttonContainer = document.createElement("div");
+            buttonContainer.classList.add("task-buttons");
+
+            const deleteButton = document.createElement("button");
+            deleteButton.classList.add("delete");
+            deleteButton.textContent = "Delete";
+
+            const editButton = document.createElement("button");
+            editButton.classList.add("edit");
+            editButton.textContent = "Edit";
+
+            deleteButton.onclick = ()=>{
+                document.getElementById("tasks").removeChild(listItem);
+            }
+
+            editButton.onclick = ()=>{
+                const updatedText = prompt("Edit your task:", newTask.textContent);
+                if (updatedText !== null) {
+                    newTask.textContent = updatedText.trim();
+                }
+            }
+
+            buttonContainer.append(editButton, deleteButton);
+            listItem.append(check, newTask, buttonContainer);
+            document.getElementById("tasks").appendChild(listItem);
+            task.value = "";
+        }                                                                                                                                    
+    </script>                                                                                                                                
+</html>

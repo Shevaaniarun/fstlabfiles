@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Directory</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Employee Directory</h2>
+        <form id="employeeForm">
+            <input type="text" id="name" placeholder="Employee Name" required>
+            <input type="text" id="position" placeholder="Position" required>
+            <input type="number" id="salary" placeholder="Salary" required>
+            <button type="submit">Add Employee</button>
+        </form>
+        <div class="employee-list" id="employeeList"></div>
+    </div>
+<style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    }
+    body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+    }
+    .container {
+    width: 400px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    }
+    h2 {
+    margin-bottom: 15px;
+    }
+    form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+    }
+    input {
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    }
+    button {
+    padding: 10px;
+    font-size: 1.2em;
+    border: none;
+    background: #1a78cf;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+    }
+    button:hover {
+    background:  rgb(37, 72, 138);
+    }
+    .employee-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    }
+    .employee-card {
+    background: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    }
+    .remove-btn {
+    background: #cc0000;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    }
+    .remove-btn:hover {
+    background: darkred;
+    }
+</style>
+<script>
+let employees = [
+{ id: 1, name: "Alice Johnson", position: "Developer", salary: 60000 },
+{ id: 2, name: "Bob Smith", position: "Designer", salary: 50000 },
+{ id: 3, name: "Charlie Brown", position: "Manager", salary: 75000 }
+];
+function displayEmployees() {
+const employeeList = document.getElementById("employeeList");
+employeeList.innerHTML = "";
+employees.forEach((employee) => {
+let card = document.createElement("div");
+card.classList.add("employee-card");
+card.innerHTML = `
+<div>
+<strong>${employee.name}</strong> - ${employee.position}
+(Rs.${employee.salary})
+</div>
+<button class="remove-btn"
+onclick="removeEmployee(${employee.id})">Remove</button>
+`;
+employeeList.appendChild(card);
+});
+}
+function addEmployee(event) {
+event.preventDefault();
+let name = document.getElementById("name").value;
+let position = document.getElementById("position").value;
+let salary = document.getElementById("salary").value;
+if (name && position && salary) {
+const newEmployee = {
+id: Date.now(),
+name: name,
+position: position,
+salary: parseFloat(salary)
+};
+employees.push(newEmployee);
+displayEmployees();
+document.getElementById("employeeForm").reset();
+}
+}
+function removeEmployee(id) {
+employees = employees.filter(employee => employee.id !== id);
+displayEmployees();
+}
+document.getElementById("employeeForm").addEventListener("submit", addEmployee);
+window.onload = displayEmployees;
+</script>
+</body>
+</html>

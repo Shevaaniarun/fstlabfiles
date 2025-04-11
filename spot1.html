@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p id="result">result: </p>
+    <script type="text/javascript"> 
+    arr1=[1,2,3,4]
+    arr2=[3,4,5,6]
+    common=[]
+    function que2(a,b)
+    {
+        for(let i=0;i<a.length;i++)
+        {
+            for(let j=0;j<b.length;j++)
+            {
+                if(a[i]==b[j])
+                {
+                    common.push(a[i]);
+                }
+            }
+        }
+    }
+    que2(arr1,arr2)
+    document.getElementById('result').innerHTML="Result: "+common;
+
+    </script>
+</body>
+</html>

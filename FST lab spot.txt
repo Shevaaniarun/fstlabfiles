@@ -1,0 +1,838 @@
+To do
+<!doctype html>                                                                                                                              
+<html>    
+    <head>                                                                                                                                  
+        <title>To do list</title>                                                                                                            
+        <style>                                                                                                                              
+            #heade{                                                                                                                         
+                color:turquoise;                                                                                                            
+                text-align:center;                                                                                                           
+                border:3px solid tomato;                                                                                                    
+                width:fit-content;                                                                                                           
+                height:fit-content;                                                                                                         
+                margin:auto;                                                                                                                
+                padding:10px                                                                                                                
+            }                                                                                                                                
+            .top{                                                                                                                            
+                margin:auto;                                                                                                                
+                padding-top:10px;                                                                                                           
+                text-align:center;                                                                                                          
+                background-color: blueviolet;                                                                                                    
+                height:30px;                                                                                                                
+                color:white;                                                                                                                
+            }                                                                                                                                
+            .container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-top: 20px;
+            }
+            
+            .input-container {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+                background-color: blueviolet;
+                padding: 20px;
+                border-radius: 5px;
+                border: 1px solid blueviolet;
+            }
+            
+            input {
+                width: 250px;
+                height: 30px;
+            }
+            
+            .add {
+                background-color: blueviolet;
+                color: white;
+                height: 30px;
+                border: 3px solid white;
+                border-radius: 5px;
+                padding: 5px 10px;
+                cursor: pointer;
+            }
+            
+            #tasks {
+                margin-top: 20px;
+                width: 400px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .task-item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                background-color: white;
+                padding: 10px;
+                border: 1px solid blueviolet;
+                border-radius: 5px;
+            }
+            
+            .task-buttons {
+                display: flex;
+                gap: 5px;
+            }
+            
+            .delete {
+                background-color: blueviolet;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                cursor: pointer;
+                border-radius: 3px;
+                justify-content: end;
+                align-items: self-end;
+            }
+            
+            .edit {
+                background-color: blueviolet;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                cursor: pointer;
+                border-radius: 3px;
+                justify-content: end;
+                align-items:self-end;
+            }
+
+            .check {
+                width: 16px;
+                height: 16px;
+                accent-color: blueviolet;
+                margin-right: 5px;
+            }
+        </style>                                                                                                                             
+    </head>                                                                                                                                  
+    <body>                                                                                                                                   
+        <p class="top">To Do App</p>
+        
+        <div class="container">
+            <div class="input-container">                                                                
+                <input type="text" id="tk" name="tk" placeholder="Enter task" required>                                                 
+                <button class="add" onclick=addTask()>Add task</button>                                                                        
+            </div>                                                                                                                               
+            
+            <div id="tasks"></div>                                                                                                              
+        </div>
+    </body>                                                                                                                                  
+    <script>                                                                                                                                 
+        function addTask(){                                                                                                                  
+            const task = document.getElementById("tk");                                                                                      
+            const tex = task.value.trim();                                                                                                    
+            if(tex === "") return;                                                                                                           
+
+            const listItem = document.createElement("div");
+            listItem.classList.add("task-item");
+
+            const check = document.createElement("input");
+            check.type = "checkbox";
+            check.classList.add("check");
+
+            const newTask = document.createElement("span");
+            newTask.textContent = tex;
+
+            const buttonContainer = document.createElement("div");
+            buttonContainer.classList.add("task-buttons");
+
+            const deleteButton = document.createElement("button");
+            deleteButton.classList.add("delete");
+            deleteButton.textContent = "Delete";
+
+            const editButton = document.createElement("button");
+            editButton.classList.add("edit");
+            editButton.textContent = "Edit";
+
+            deleteButton.onclick = ()=>{
+                document.getElementById("tasks").removeChild(listItem);
+            }
+
+            editButton.onclick = ()=>{
+                const updatedText = prompt("Edit your task:", newTask.textContent);
+                if (updatedText !== null) {
+                    newTask.textContent = updatedText.trim();
+                }
+            }
+
+            buttonContainer.append(editButton, deleteButton);
+            listItem.append(check, newTask, buttonContainer);
+            document.getElementById("tasks").appendChild(listItem);
+            task.value = "";
+        }                                                                                                                                    
+    </script>                                                                                                                                
+</html>
+Calculator
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="calculator">
+        <input type="text" id="display" disabled>
+        <div class="buttons">
+            <button class="btn operator1" onclick="clearDisplay()">C</button>
+            <button class="btn operator1" onclick="toggleSign()">+/-</button>
+            <button class="btn operator1" onclick="appendValue('%')">%</button>
+            <button class="btn operator" onclick="appendValue('/')">÷</button>
+
+            <button class="btn" onclick="appendValue('7')">7</button>
+            <button class="btn" onclick="appendValue('8')">8</button>
+            <button class="btn" onclick="appendValue('9')">9</button>
+            <button class="btn operator" onclick="appendValue('*')">×</button>
+
+            <button class="btn" onclick="appendValue('4')">4</button>
+            <button class="btn" onclick="appendValue('5')">5</button>
+            <button class="btn" onclick="appendValue('6')">6</button>
+            <button class="btn operator" onclick="appendValue('-')">-</button>
+
+            <button class="btn" onclick="appendValue('1')">1</button>
+            <button class="btn" onclick="appendValue('2')">2</button>
+            <button class="btn" onclick="appendValue('3')">3</button>
+            <button class="btn operator" onclick="appendValue('+')">+</button>
+
+            <button class="btn zero" onclick="appendValue('0')">0</button>
+            <button class="btn" onclick="appendValue('.')">.</button>
+            <button class="btn equal" onclick="calculateResult()">=</button>
+        </div>
+    </div>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+
+        .calculator {
+            width: 320px;
+            background: black;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #display {
+            width: 100%;
+            height: 60px;
+            font-size: 2em;
+            text-align: right;
+            padding: 10px;
+            border: none;
+            background: black;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border-color: gray;
+            color: white
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 20px;
+            font-size: 1.5em;
+            border: none;
+            background: grey;
+            color: white;
+            cursor: pointer;
+            border-radius: 50%;  
+            width: 60px; 
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #bbb;
+        }
+
+        .operator {
+            background: rgb(252, 19, 120);
+            color: white;
+        }
+
+        .operator1{
+            background: rgb(195, 219, 213);
+            color: black;
+        }
+
+        .operator:hover {
+            background: red;
+        }
+
+        .equal {
+            background: purple;
+            color: white;
+        }
+
+        .equal:hover {
+            background: #45a049;
+        }
+
+        .zero {
+            grid-column: span 2;
+        }
+
+    </style>
+    <script>
+        let display = document.getElementById("display");
+
+        function appendValue(value) {
+            display.value += value;
+        }
+
+        function clearDisplay() {
+            display.value = "";
+        }
+
+        function toggleSign() {
+            if (display.value) {
+                display.value = String(-parseFloat(display.value));
+            }
+        }
+
+        function calculateResult() {
+            try {
+                display.value = new Function(`return ${display.value}`)();
+            } catch {
+                display.value = "Error";
+            }
+        }
+
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+Employee directory
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Directory</title>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Employee Directory</h2>
+
+        <!-- Form to Add Employee -->
+        <form id="employeeForm">
+            <input type="text" id="name" placeholder="Employee Name" required>
+            <input type="text" id="position" placeholder="Position" required>
+            <input type="number" id="salary" placeholder="Salary" required>
+            <button type="submit">Add Employee</button>
+        </form>
+        <div class="employee-list" id="employeeList"></div>
+    </div>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 400px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 15px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 1.2em;
+            border: none;
+            background: #4caf50;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .employee-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .employee-card {
+            background: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .remove-btn {
+            background: #ff4c4c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .remove-btn:hover {
+            background: #cc0000;
+        }
+
+    </style>
+    <script>
+        let employees = [
+        { id: 1, name: "Alice Johnson", position: "Developer", salary: 60000 },
+        { id: 2, name: "Bob Smith", position: "Designer", salary: 50000 },
+        { id: 3, name: "Charlie Brown", position: "Manager", salary: 75000 }
+    ];
+
+    function displayEmployees() {
+        const employeeList = document.getElementById("employeeList");
+        employeeList.innerHTML = "";
+
+        employees.forEach((employee) => {
+            let card = document.createElement("div");
+            card.classList.add("employee-card");
+            card.innerHTML = `
+                <div>
+                    <strong>${employee.name}</strong> - ${employee.position} ($${employee.salary})
+                </div>
+                <button class="remove-btn" onclick="removeEmployee(${employee.id})">Remove</button>
+            `;
+            employeeList.appendChild(card);
+        });
+    }
+
+    function addEmployee(event) {
+        event.preventDefault();
+        
+        let name = document.getElementById("name").value;
+        let position = document.getElementById("position").value;
+        let salary = document.getElementById("salary").value;
+
+        if (name && position && salary) {
+            const newEmployee = {
+                id: Date.now(), 
+                name: name,
+                position: position,
+                salary: parseFloat(salary)
+            };
+
+            employees.push(newEmployee);
+            displayEmployees();
+            document.getElementById("employeeForm").reset();
+        }
+    }
+
+    function removeEmployee(id) {
+        employees = employees.filter(employee => employee.id !== id);
+        displayEmployees();
+    }
+
+    document.getElementById("employeeForm").addEventListener("submit", addEmployee);
+
+    window.onload = displayEmployees;
+
+    </script>
+</body>
+</html>
+
+Student mark calc
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Grade Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Student Grade Calculator</h2>
+        <form id="gradeForm">
+            <div class="input-group">
+                <label>Subject 1:</label>
+                <input type="number" id="subject1" min="0" max="100" required>
+            </div>
+            <div class="input-group">
+                <label>Subject 2:</label>
+                <input type="number" id="subject2" min="0" max="100" required>
+            </div>
+            <div class="input-group">
+                <label>Subject 3:</label>
+                <input type="number" id="subject3" min="0" max="100" required>
+            </div>
+            <div class="input-group">
+                <label>Subject 4:</label>
+                <input type="number" id="subject4" min="0" max="100" required>
+            </div>
+            <div class="input-group">
+                <label>Subject 5:</label>
+                <input type="number" id="subject5" min="0" max="100" required>
+            </div>
+            <button type="button" onclick="calculateGrade()">Calculate</button>
+        </form>
+
+        <div id="result">
+            <p><strong>Total Marks:</strong> <span id="total"></span></p>
+            <p><strong>Average:</strong> <span id="average"></span></p>
+            <p><strong>Grade:</strong> <span id="grade"></span></p>
+        </div>
+    </div>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 350px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 15px;
+        }
+
+        form {
+            display: grid;
+            gap: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            justify-content: space-between;
+        }
+        input {
+            width: 60px;
+            padding: 5px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+        }
+        button {
+            padding: 10px;
+            font-size: 1.2em;
+            border: none;
+            background: #4caf50;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        #result {
+            margin-top: 15px;
+            font-size: 1.2em;
+        }
+    </style>
+    <script>
+        function calculateGrade() {
+        let s1 = parseFloat(document.getElementById("subject1").value) || 0;
+        let s2 = parseFloat(document.getElementById("subject2").value) || 0;
+        let s3 = parseFloat(document.getElementById("subject3").value) || 0;
+        let s4 = parseFloat(document.getElementById("subject4").value) || 0;
+        let s5 = parseFloat(document.getElementById("subject5").value) || 0;
+
+        let total = s1 + s2 + s3 + s4 + s5;
+        let average = total / 5;
+        let grade = '';
+
+        if (average >= 90) {
+            grade = "A+";
+        } else if (average >= 80) {
+            grade = "A";
+        } else if (average >= 70) {
+            grade = "B";
+        } else if (average >= 60) {
+            grade = "C";
+        } else if (average >= 50) {
+            grade = "D";
+        } else {
+            grade = "F";
+        }
+
+        document.getElementById("total").textContent = total;
+        document.getElementById("average").textContent = average.toFixed(2);
+        document.getElementById("grade").textContent = grade;
+    }
+
+    </script>
+</body>
+</html>
+Product filter app
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Filter App</title>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Product Filter App</h2>
+
+        <!-- Filter Dropdown -->
+        <div class="filter-box">
+            <label for="categoryFilter">Filter by Category:</label>
+            <select id="categoryFilter" onchange="filterProducts()">
+                <option value="all">All</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Clothing">Clothing</option>
+                <option value="Furniture">Furniture</option>
+            </select>
+        </div>
+
+        <!-- Add Product Form -->
+        <form id="addProductForm">
+            <input type="text" id="productName" placeholder="Product Name" required>
+            <select id="productCategory">
+                <option value="Electronics">Electronics</option>
+                <option value="Clothing">Clothing</option>
+                <option value="Furniture">Furniture</option>
+            </select>
+            <input type="number" id="productPrice" placeholder="Price" required>
+            <button type="button" onclick="addProduct()">Add Product</button>
+        </form>
+
+        <!-- Product List -->
+        <div id="productList"></div>
+    </div>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 400px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        /* Filter Box */
+        .filter-box {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        select {
+            padding: 5px;
+            font-size: 1em;
+            border-radius: 5px;
+        }
+
+        /* Add Product Form */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input, select, button {
+            padding: 8px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background: #4caf50;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        /* Product List */
+        #productList {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        /* Product Card */
+        .product-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+        }
+
+        .remove-btn {
+            background: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .remove-btn:hover {
+            background: darkred;
+        }
+
+    </style>
+    <script>
+        let products = [
+        { name: "Laptop", category: "Electronics", price: 1000 },
+        { name: "Smartphone", category: "Electronics", price: 700 },
+        { name: "T-shirt", category: "Clothing", price: 20 },
+        { name: "Jeans", category: "Clothing", price: 50 },
+        { name: "Sofa", category: "Furniture", price: 500 },
+        { name: "Table", category: "Furniture", price: 200 }
+    ];
+
+    function displayProducts(filteredProducts) {
+        let productList = document.getElementById("productList");
+        productList.innerHTML = "";
+
+        filteredProducts.forEach((product, index) => {
+            let productCard = document.createElement("div");
+            productCard.classList.add("product-card");
+            productCard.innerHTML = `
+                <div>
+                    <strong>${product.name}</strong><br>
+                    <small>${product.category} - $${product.price}</small>
+                </div>
+                <button class="remove-btn" onclick="removeProduct(${index})">Remove</button>
+            `;
+            productList.appendChild(productCard);
+        });
+    }
+
+    function filterProducts() {
+        let category = document.getElementById("categoryFilter").value;
+        let filteredProducts = category === "all" ? products : products.filter(product => product.category === category);
+        displayProducts(filteredProducts);
+    }
+
+    function addProduct() {
+        let name = document.getElementById("productName").value.trim();
+        let category = document.getElementById("productCategory").value;
+        let price = document.getElementById("productPrice").value.trim();
+
+        if (name && price) {
+            let newProduct = {
+                name,
+                category,
+                price: parseFloat(price)
+            };
+            products.push(newProduct);
+            filterProducts(); // Refresh list based on selected filter
+            document.getElementById("addProductForm").reset();
+        } else {
+            alert("Please fill all fields.");
+        }
+    }
+
+    function removeProduct(index) {
+        products.splice(index, 1);
+        filterProducts();
+    }
+
+    // Display all products initially
+    displayProducts(products);
+
+    </script>
+</body>
+</html>
+
